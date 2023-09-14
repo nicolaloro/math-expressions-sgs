@@ -77,12 +77,22 @@ class Parser {
         case TokenType.LTE:
           right = exprStack.removeLast();
           left = exprStack.removeLast();
-          currExpr = LowerThanOrEqualTo(left, right);
+          currExpr = left <= right;
           break;
         case TokenType.LT:
           right = exprStack.removeLast();
           left = exprStack.removeLast();
           currExpr = left < right;
+          break;
+        case TokenType.GTE:
+          right = exprStack.removeLast();
+          left = exprStack.removeLast();
+          currExpr = left >= right;
+          break;
+        case TokenType.GT:
+          right = exprStack.removeLast();
+          left = exprStack.removeLast();
+          currExpr = left > right;
           break;
         case TokenType.EFUNC:
           currExpr = Exponential(exprStack.removeLast());
@@ -195,6 +205,8 @@ class Lexer {
     keywords['^'] = TokenType.POW;
     keywords['<'] = TokenType.LT;
     keywords['≤'] = TokenType.LTE;
+    keywords['>'] = TokenType.GT;
+    keywords['≥'] = TokenType.GTE;
     keywords['!'] = TokenType.FACTORIAL;
     keywords['nrt'] = TokenType.ROOT;
     keywords['sqrt'] = TokenType.SQRT;
@@ -549,10 +561,13 @@ class TokenType {
 
   // SGS added token
   static const TokenType LT =
-  TokenType._internal('LT', 4, operator: true); // Lower than
+  TokenType._internal('LT', 4, operator: true, leftAssociative: false); // Lower than
   static const TokenType LTE =
-  TokenType._internal('LTE', 5, operator: true, leftAssociative: false); // Lower than or equal
-
+  TokenType._internal('LTE', 4, operator: true, leftAssociative: false); // Lower than or equal
+  static const TokenType GT =
+  TokenType._internal('GT', 4, operator: true, leftAssociative: false); // Greater than
+  static const TokenType GTE =
+  TokenType._internal('GTE', 4, operator: true, leftAssociative: false); // Greater than or equal
 
   // Functions
   static const TokenType FACTORIAL =
