@@ -49,6 +49,9 @@ abstract class Expression {
   /// Unary minus operator. Creates a [UnaryMinus] expression.
   Expression operator -() => UnaryMinus(this);
 
+  /// Equal to operator. Returns 1 if true, 0 if false
+  Expression operator ==(Expression exp) => EqualTo(this, exp);
+
   /// Lower than operator. Returns 1 if true, 0 if false
   Expression operator <(Expression exp) => LowerThan(this, exp);
 
@@ -286,6 +289,34 @@ class Plus extends BinaryOperator {
 
   @override
   String toString() => '($first + $second)';
+}
+
+/// The EqualTo operator returns 1 (as double) if true, 0 (as double) if false
+class EqualTo extends BinaryOperator{
+  EqualTo(dynamic first, dynamic second) : super(first, second);
+
+  @override
+  Expression derive(String toVar) =>
+      EqualTo(first.derive(toVar), second.derive(toVar));
+
+  @override
+  dynamic evaluate(EvaluationType type, ContextModel context) {
+    final dynamic firstEval = first.evaluate(type, context);
+    final dynamic secondEval = second.evaluate(type, context);
+    double _true = 1;
+    double _false = 0;
+
+    if(firstEval is double && secondEval is double){
+      if (firstEval == secondEval){
+        return _true;
+      }
+    }
+    return _false;
+  }
+
+
+  @override
+  String toString() => '($first == $second)';
 }
 
 /// The LowerThan operator returns 1 (as double) if true, 0 (as double) if false
