@@ -74,7 +74,12 @@ class Parser {
           left = exprStack.removeLast();
           currExpr = left ^ right;
           break;
-        case TokenType.LTE:
+        case TokenType.EQ:
+          right = exprStack.removeLast();
+          left = exprStack.removeLast();
+          currExpr = left == right;
+          break;
+          case TokenType.LTE:
           right = exprStack.removeLast();
           left = exprStack.removeLast();
           currExpr = left <= right;
@@ -203,6 +208,7 @@ class Lexer {
     keywords['/'] = TokenType.DIV;
     keywords['%'] = TokenType.MOD;
     keywords['^'] = TokenType.POW;
+    keywords['='] = TokenType.EQ;
     keywords['<'] = TokenType.LT;
     keywords['≤'] = TokenType.LTE;
     keywords['>'] = TokenType.GT;
@@ -560,6 +566,8 @@ class TokenType {
       TokenType._internal('UNPLUS', 3, leftAssociative: false, operator: true);
 
   // SGS added token
+  static const TokenType EQ =
+  TokenType._internal('EQ', 4, operator: true, leftAssociative: false); // Equal To
   static const TokenType LT =
   TokenType._internal('LT', 4, operator: true, leftAssociative: false); // Lower than
   static const TokenType LTE =
