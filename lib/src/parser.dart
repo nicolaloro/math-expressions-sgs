@@ -77,9 +77,9 @@ class Parser {
         case TokenType.EQ:
           right = exprStack.removeLast();
           left = exprStack.removeLast();
-          currExpr = left == right;
+          currExpr = left | right;
           break;
-          case TokenType.LTE:
+        case TokenType.LTE:
           right = exprStack.removeLast();
           left = exprStack.removeLast();
           currExpr = left <= right;
@@ -208,7 +208,7 @@ class Lexer {
     keywords['/'] = TokenType.DIV;
     keywords['%'] = TokenType.MOD;
     keywords['^'] = TokenType.POW;
-    keywords['='] = TokenType.EQ;
+    keywords['|'] = TokenType.EQ;
     keywords['<'] = TokenType.LT;
     keywords['≤'] = TokenType.LTE;
     keywords['>'] = TokenType.GT;
@@ -408,7 +408,7 @@ class Lexer {
        * an unary plur or minus, so the tokentype has to be changed.
        */
       if ((curToken.type == TokenType.MINUS ||
-              curToken.type == TokenType.PLUS) &&
+          curToken.type == TokenType.PLUS) &&
           (prevToken == null ||
               prevToken.type.operator ||
               prevToken.type == TokenType.SEPAR ||
@@ -432,8 +432,8 @@ class Lexer {
       if (curToken.type.operator) {
         while (operatorBuffer.isNotEmpty &&
             ((curToken.type.leftAssociative &&
-                    curToken.type.priority <=
-                        operatorBuffer.last.type.priority) ||
+                curToken.type.priority <=
+                    operatorBuffer.last.type.priority) ||
                 (!curToken.type.leftAssociative &&
                     curToken.type.priority <
                         operatorBuffer.last.type.priority))) {
@@ -513,8 +513,8 @@ class Token {
   @override
   bool operator ==(Object token) =>
       (token is Token) &&
-      (token.text == this.text) &&
-      (token.type == this.type);
+          (token.text == this.text) &&
+          (token.type == this.type);
 
   @override
   int get hashCode {
@@ -553,17 +553,17 @@ class TokenType {
   // Operators
   static const TokenType PLUS = TokenType._internal('PLUS', 1, operator: true);
   static const TokenType MINUS =
-      TokenType._internal('MINUS', 1, operator: true);
+  TokenType._internal('MINUS', 1, operator: true);
   static const TokenType TIMES =
-      TokenType._internal('TIMES', 2, operator: true);
+  TokenType._internal('TIMES', 2, operator: true);
   static const TokenType DIV = TokenType._internal('DIV', 2, operator: true);
   static const TokenType MOD = TokenType._internal('MOD', 2, operator: true);
   static const TokenType POW =
-      TokenType._internal('POW', 4, leftAssociative: false, operator: true);
+  TokenType._internal('POW', 4, leftAssociative: false, operator: true);
   static const TokenType UNMINUS =
-      TokenType._internal('UNMINUS', 3, leftAssociative: false, operator: true);
+  TokenType._internal('UNMINUS', 3, leftAssociative: false, operator: true);
   static const TokenType UNPLUS =
-      TokenType._internal('UNPLUS', 3, leftAssociative: false, operator: true);
+  TokenType._internal('UNPLUS', 3, leftAssociative: false, operator: true);
 
   // SGS added token
   static const TokenType EQ =
@@ -579,7 +579,7 @@ class TokenType {
 
   // Functions
   static const TokenType FACTORIAL =
-      TokenType._internal('FACTORIAL', 5, function: true);
+  TokenType._internal('FACTORIAL', 5, function: true);
   static const TokenType SQRT = TokenType._internal('SQRT', 5, function: true);
   static const TokenType ROOT = TokenType._internal('ROOT', 5, function: true);
   static const TokenType LOG = TokenType._internal('LOG', 5, function: true);
@@ -593,10 +593,10 @@ class TokenType {
   static const TokenType ABS = TokenType._internal('ABS', 5, function: true);
   static const TokenType CEIL = TokenType._internal('CEIL', 5, function: true);
   static const TokenType FLOOR =
-      TokenType._internal('FLOOR', 5, function: true);
+  TokenType._internal('FLOOR', 5, function: true);
   static const TokenType SGN = TokenType._internal('SGN', 5, function: true);
   static const TokenType EFUNC =
-      TokenType._internal('EFUNC', 5, function: true);
+  TokenType._internal('EFUNC', 5, function: true);
   static const TokenType FUNC = TokenType._internal('FUNC', 5, function: true);
 
   /// The string value of this token type.
@@ -619,8 +619,8 @@ class TokenType {
   /// provided by this class.
   const TokenType._internal(this.value, this.priority,
       {this.leftAssociative = true,
-      this.operator = false,
-      this.function = false});
+        this.operator = false,
+        this.function = false});
 
   @override
   String toString() => value;

@@ -50,7 +50,7 @@ abstract class Expression {
   Expression operator -() => UnaryMinus(this);
 
   /// Equal to operator. Returns 1 if true, 0 if false
-  Expression operator ==(Expression exp) => EqualTo(this, exp);
+  Expression operator |(Expression exp) => EqualTo(this, exp);
 
   /// Lower than operator. Returns 1 if true, 0 if false
   Expression operator <(Expression exp) => LowerThan(this, exp);
@@ -590,7 +590,7 @@ class Divide extends BinaryOperator {
   @override
   Expression derive(String toVar) =>
       ((first.derive(toVar) * second) - (first * second.derive(toVar))) /
-      (second * second);
+          (second * second);
 
   /// Possible simplifications:
   ///
@@ -936,7 +936,7 @@ class Vector extends Literal {
   @override
   Expression derive(String toVar) {
     final elementDerivative =
-        elements.map((item) => item.derive(toVar)).toList();
+    elements.map((item) => item.derive(toVar)).toList();
 
     return Vector(elementDerivative);
   }
@@ -1120,9 +1120,9 @@ class IntervalLiteral extends Literal {
   @override
   bool isConstant() =>
       min is Literal &&
-      (min as Literal).isConstant() &&
-      max is Literal &&
-      (max as Literal).isConstant();
+          (min as Literal).isConstant() &&
+          max is Literal &&
+          (max as Literal).isConstant();
 
   @override
   Interval getConstantValue() => Interval(
